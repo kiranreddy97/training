@@ -1,22 +1,29 @@
-node('paytmnode'){
- 
- properties([
-    buildDiscarder(logRotator(numToKeepStr: '3')),
-    pipelineTriggers([
-        pollSCM('* * * * *')
-    ])
-])
-
- def mavenHome = tool name: 'maven3.6.1', type: 'maven'
- 
- stage('CheckoutCode') {
- //git branch: 'master', credentialsId: '82478555-478a-4b62-900c-fcdedfa161a3', url: 'https://github.com/kiranreddy97/training.git'
-  git 'https://github.com/kiranreddy97/training.git'
- }  
-  
-  stage('Build') {
- 
-    sh "${mavenHome}/bin/mvn clean package"
-  
- }      
+node{
+     
+    stage('SCM Checkout'){
+        git credentialsId: 'GIT_CREDENTIALS', url:  'https://github.com/kiranreddy97/training.git',branch: 'main'
+    
+    stage(" Maven Clean Package"){
+      def mavenHome =  tool name: "maven", type: "maven"
+      def mavenCMD = "${mavenHome}/bin/mvn"
+      sh "${mavenCMD} clean package"
+      
+    } 
+    
+    
+    stage('Build Docker Image'){
+        sh 'docker build -t srikiranreddy/mavenapp .'
+    }
+    
+    stage('Push Docker Image'){
+        
+      withCredentials([string(credentialsId: 'dockerpass', variable: 'dockerpassword')]) {
+          sh "docker login -u srikiranreddy -p $dockerpassword"
+        }
+        sh 'docker push srikiranreddy/mavenapp'
+ }
+ stage('run docker images as container '){
+     sh 'docker run -d -p 9091:8080 --name tomcatjenkins srikiranreddy/mavenapp '
+ }
+}
 }
