@@ -84,6 +84,7 @@
 		</dependency>
 
 	</dependencies>
+	<!-- 
 	<distributionManagement>
 	    <repository>
 	      <id>nexus</id>
@@ -96,7 +97,7 @@
 	      <url>http://13.232.225.155:8081/repository/hima-snapshot/</url>
 	    </snapshotRepository>
 	</distributionManagement>
-	
+	-->
 	
 	<build>
 		<finalName>maven-web-application</finalName>
