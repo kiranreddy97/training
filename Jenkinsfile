@@ -12,18 +12,18 @@ node{
     
     
     stage('Build Docker Image'){
-        sh 'docker build -t srikiranreddy/mavenapp .'
+        sh 'docker build -t docker.io/srikiranreddy/mavenapp:1 .'
     }
     
     stage('Push Docker Image'){
         
-      withCredentials([string(credentialsId: 'dockerpass', variable: 'dockerpassword')]) {
-          sh "docker login -u srikiranreddy -p $dockerpassword"
-        }
-        sh 'docker push srikiranreddy/mavenapp'
+ withCredentials([usernamePassword(credentialsId: '3f123fe3-ce62-4f7d-806a-943d782f0d94', passwordVariable: 'Amma@1234', usernameVariable: 'srikiranreddy')]) {
+    // some block
+}
+        sh 'docker push docker.io/srikiranreddy/mavenapp:1'
  }
  stage('run docker images as container '){
-     sh 'docker run -d -p 9091:8080 --name tomcatjenkins srikiranreddy/mavenapp '
+     sh 'docker run -d -p 9091:8080 --name tomcatjenkins docker.io/srikiranreddy/mavenapp '
  }
 }
 }
