@@ -1,6 +1,0 @@
-version: '3.1'
-services:
-   tomcat:
-     image: srikiranreddy/maven
-     ports:
-       - "9000:8900"
